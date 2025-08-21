@@ -1,8 +1,8 @@
 package main
 
 import (
+	"ikel-bot/pkg/configs"
 	"ikel-bot/pkg/handlers"
-	"ikel-bot/pkg/services"
 	"ikel-bot/pkg/utils"
 	"os"
 	"os/signal"
@@ -20,18 +20,18 @@ func main() {
 
 	token := os.Getenv("DISCORD_TOKEN")
 
-	discordService := services.NewDiscordService(token)
+	discord := configs.NewDiscord(token)
 
-	discordService.Client.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
+	discord.Client.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		logger.Info("Bot is running")
 	})
 
-	discordService.Client.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
+	discord.Client.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
 		handlers.PingHandler(s, m, logger)
 	})
-	discordService.Client.Open()
+	discord.Client.Open()
 
-	defer discordService.Client.Close()
+	defer discord.Client.Close()
 
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)

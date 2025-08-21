@@ -5,13 +5,13 @@ import (
 	"go.uber.org/zap"
 )
 
-func PingHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
+func GeminiHandler(s *discordgo.Session, m *discordgo.Message, logger *zap.Logger) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
-	if m.Content == "!ping" {
-		_, err := s.ChannelMessageSend(m.ChannelID, "Pong!")
+	if m.Content == "!ask" {
+		_, err := s.ChannelMessageSend(m.ChannelID, "")
 		if err != nil {
 			logger.Error("Error sending message", zap.Error(err))
 		}
