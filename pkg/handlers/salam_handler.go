@@ -1,21 +1,18 @@
 package handlers
 
 import (
-	"os"
-
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )
 
-func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
+func SalamHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
-	var GEMINI_API_URL = os.Getenv("GEMINI_API_URL")
-
-	_, err := s.ChannelMessageSend(m.ChannelID, GEMINI_API_URL)
+	_, err := s.ChannelMessageSend(m.ChannelID, "Assalamu'alaikum")
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))
+		return
 	}
 }

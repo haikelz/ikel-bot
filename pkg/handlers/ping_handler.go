@@ -10,10 +10,9 @@ func PingHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 		return
 	}
 
-	if m.Content == "!ping" {
-		_, err := s.ChannelMessageSend(m.ChannelID, "Pong!")
-		if err != nil {
-			logger.Error("Error sending message", zap.Error(err))
-		}
+	_, err := s.ChannelMessageSend(m.ChannelID, "Pong!")
+	if err != nil {
+		logger.Error("Error sending message", zap.Error(err))
+		return
 	}
 }
