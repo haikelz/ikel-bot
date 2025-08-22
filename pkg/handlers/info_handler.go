@@ -11,7 +11,7 @@ func InfoHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 	}
 
 	const content = `
-	**Katou Megumi**
+	**Katou Megumi (My Istri)**
 
 **Menu: **
 !salam
@@ -25,9 +25,15 @@ func InfoHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 !animequote
 !ocr
 !asmaulhusna
-	`
 
-	_, err := s.ChannelMessageSend(m.ChannelID, content)
+**Bot created by https://github.com/haikelz/**
+`
+
+	_, err := s.ChannelMessageSendReply(m.ChannelID, content, &discordgo.MessageReference{
+		MessageID: m.ID,
+		ChannelID: m.ChannelID,
+		GuildID:   m.GuildID,
+	})
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))
 		return

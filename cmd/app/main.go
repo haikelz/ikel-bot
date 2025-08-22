@@ -9,13 +9,10 @@ import (
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
-	"go.uber.org/zap"
 )
 
 func main() {
-	logger, _ := zap.NewProduction()
-	defer logger.Sync()
-
+	logger := configs.NewZap()
 	utils.LoadEnv()
 
 	var DISCORD_TOKEN = os.Getenv("DISCORD_TOKEN")
