@@ -15,7 +15,7 @@ import (
 func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
 	var DOA_API_URL = os.Getenv("DOA_API_URL")
 
-	response, err := http.Get(DOA_API_URL)
+	response, err := http.Get(DOA_API_URL + "/api/doa/v1/random")
 	if err != nil {
 		logger.Error("Error fetching do'a", zap.Error(err))
 		return
@@ -26,7 +26,6 @@ func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 	if err != nil {
 		logger.Error("Error reading do'a", zap.Error(err))
 		return
-
 	}
 
 	var doaResponse []entities.Doa
@@ -36,17 +35,7 @@ func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 		return
 	}
 
-	loopDoaMessage(0, 10, doaResponse, s, m, logger)
-}
-
-func loopDoaMessage(start int, end int, doaResponse []entities.Doa, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
-	content := ``
-
-	for _, v := range doaResponse[start:end] {
-		content += fmt.Sprintf("%d - %s - %s - %s\n", v.ID, v.Doa, v.Ayat, v.Artinya)
-	}
-
-	_, err := s.ChannelMessageSend(m.ChannelID, content)
+	_, err = s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%d - %s - %s - %s", doaResponse[0].ID, doaResponse[0].Doa, doaResponse[0].Ayat, doaResponse[0].Artinya))
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))
 		return

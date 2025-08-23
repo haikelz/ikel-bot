@@ -34,19 +34,24 @@ func main() {
 			handlers.SalamHandler(s, m, logger)
 		}
 		if m.Content == "!asmaulhusna" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.AsmaulHusnaHandler(s, m, logger)
 		}
 		if m.Content == "!ask" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.GeminiHandler(s, m, logger)
 		}
 		if m.Content == "!jokes" {
-			handlers.JokesHandler(s, m, logger)
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.JokeHandler(s, m, logger)
 		}
 		if m.Content == "!jadwalsholat" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.JadwalSholatHandler(s, m, logger)
 		}
 
 		if m.Content == "!doa" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.DoaHandler(s, m, logger)
 		}
 	})

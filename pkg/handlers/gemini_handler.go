@@ -39,8 +39,6 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 		return
 	}
 
-	fmt.Println(response.Text())
-
 	_, err = s.ChannelMessageSend(m.ChannelID, response.Text())
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))
