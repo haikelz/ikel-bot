@@ -6,3 +6,9 @@ type AsmaulHusna struct {
 	Arab   string `json:"arab"`
 	Arti   string `json:"arti"`
 }
+
+type AsmaulHusnaResponse struct {
+	StatusCode int           `json:"statusCode"`
+	Total      int           `json:"total"`
+	Data       []AsmaulHusna `json:"data"`
+}

@@ -45,6 +45,10 @@ func main() {
 		if m.Content == "!jadwalsholat" {
 			handlers.JadwalSholatHandler(s, m, logger)
 		}
+
+		if m.Content == "!doa" {
+			handlers.DoaHandler(s, m, logger)
+		}
 	})
 
 	discord.Client.Open()
