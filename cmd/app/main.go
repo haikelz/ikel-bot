@@ -58,6 +58,10 @@ func main() {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.DoaHandler(s, m, logger, command)
 		}
+		if splitMessage[0] == "!quote" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.QuoteHandler(s, m, logger, command)
+		}
 	})
 
 	discord.Client.Open()

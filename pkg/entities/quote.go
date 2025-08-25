@@ -7,3 +7,14 @@ type Qoute struct {
 	Character string `json:"character"`
 	Anime     string `json:"anime"`
 }
+
+type QuoteResponse struct {
+	Sukses bool    `json:"sukses"`
+	Next   bool    `json:"next"`
+	Result []Qoute `json:"result"`
+}
+
+type QuotesResponse struct {
+	Sukses bool    `json:"sukses"`
+	Result []Qoute `json:"result"`
+}
