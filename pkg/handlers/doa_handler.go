@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
+func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
 	var DOA_API_URL = os.Getenv("DOA_API_URL")
 
 	response, err := http.Get(DOA_API_URL + "/api/doa/v1/random")
@@ -35,7 +35,11 @@ func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 		return
 	}
 
-	_, err = s.ChannelMessageSend(m.ChannelID, fmt.Sprintf("%d - %s - %s - %s", doaResponse[0].ID, doaResponse[0].Doa, doaResponse[0].Ayat, doaResponse[0].Artinya))
+	_, err = s.ChannelMessageSendReply(m.ChannelID, fmt.Sprintf("%d - %s - %s - %s", doaResponse[0].ID, doaResponse[0].Doa, doaResponse[0].Ayat, doaResponse[0].Artinya, command), &discordgo.MessageReference{
+		MessageID: m.ID,
+		ChannelID: m.ChannelID,
+		GuildID:   m.GuildID,
+	})
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))
 		return

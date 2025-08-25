@@ -6,6 +6,7 @@ import (
 	"ikel-bot/pkg/utils"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 
 	"github.com/bwmarrin/discordgo"
@@ -24,35 +25,38 @@ func main() {
 	})
 
 	discord.Client.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		if m.Content == "!info" {
-			handlers.InfoHandler(s, m, logger)
-		}
-		if m.Content == "!ping" {
-			handlers.PingHandler(s, m, logger)
-		}
-		if m.Content == "!salam" {
-			handlers.SalamHandler(s, m, logger)
-		}
-		if m.Content == "!asmaulhusna" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			handlers.AsmaulHusnaHandler(s, m, logger)
-		}
-		if m.Content == "!ask" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			handlers.GeminiHandler(s, m, logger)
-		}
-		if m.Content == "!jokes" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			handlers.JokeHandler(s, m, logger)
-		}
-		if m.Content == "!jadwalsholat" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			handlers.JadwalSholatHandler(s, m, logger)
-		}
+		var splitMessage = strings.Split(m.Content, " ")
+		var args = splitMessage[1:]
+		var command = strings.Join(args, " ")
 
-		if m.Content == "!doa" {
+		if splitMessage[0] == "!info" {
+			handlers.InfoHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!ping" {
+			handlers.PingHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!salam" {
+			handlers.SalamHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!asmaulhusna" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			handlers.DoaHandler(s, m, logger)
+			handlers.AsmaulHusnaHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!ask" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.GeminiHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!jokes" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.JokeHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!jadwalsholat" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.JadwalSholatHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!doa" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.DoaHandler(s, m, logger, command)
 		}
 	})
 

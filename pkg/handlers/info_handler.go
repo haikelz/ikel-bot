@@ -5,7 +5,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func InfoHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
+func InfoHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}

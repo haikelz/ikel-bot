@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"ikel-bot/pkg/configs"
 	"os"
 
@@ -11,14 +10,12 @@ import (
 	"google.golang.org/genai"
 )
 
-func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
+func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
 	var GEMINI_API_KEY = os.Getenv("GEMINI_API_KEY")
-
-	fmt.Println(GEMINI_API_KEY)
 
 	client := configs.NewGemini(context.Background(), GEMINI_API_KEY)
 
@@ -27,7 +24,7 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 			Role: "user",
 			Parts: []*genai.Part{
 				{
-					Text: m.Content,
+					Text: "Jawab pertanyaan ini dengan bahasa Indonesia: " + command,
 				},
 			},
 		},
@@ -39,7 +36,11 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 		return
 	}
 
-	_, err = s.ChannelMessageSend(m.ChannelID, response.Text())
+	_, err = s.ChannelMessageSendReply(m.ChannelID, response.Text(), &discordgo.MessageReference{
+		MessageID: m.ID,
+		ChannelID: m.ChannelID,
+		GuildID:   m.GuildID,
+	})
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))
 	}

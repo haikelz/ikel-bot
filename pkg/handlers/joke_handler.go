@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func JokeHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
+func JokeHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
 	var JOKES_API_URL = os.Getenv("JOKES_API_URL")
 
 	imageUrl, err := getJokeImage(JOKES_API_URL, logger)
@@ -26,9 +26,13 @@ func JokeHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 		return
 	}
 
-	_, err = s.ChannelMessageSendEmbed(m.ChannelID, &discordgo.MessageEmbed{
+	_, err = s.ChannelMessageSendEmbedReply(m.ChannelID, &discordgo.MessageEmbed{
 		Title: jokeText,
 		Image: &discordgo.MessageEmbedImage{URL: imageUrl},
+	}, &discordgo.MessageReference{
+		MessageID: m.ID,
+		ChannelID: m.ChannelID,
+		GuildID:   m.GuildID,
 	})
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))

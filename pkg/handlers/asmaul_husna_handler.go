@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
+func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
 	var ASMAUL_HUSNA_API_URL = os.Getenv("ASMAUL_HUSNA_API_URL")
 
 	response, err := http.Get(ASMAUL_HUSNA_API_URL + "/api/all")
@@ -49,7 +49,11 @@ func loopAsmaulHusnaMessage(start int, end int, asmaulHusnaResponse entities.Asm
 		content += fmt.Sprintf("%d - %s - %s - %s\n", v.Urutan, v.Latin, v.Arab, v.Arti)
 	}
 
-	_, err := s.ChannelMessageSend(m.ChannelID, content)
+	_, err := s.ChannelMessageSendReply(m.ChannelID, content, &discordgo.MessageReference{
+		MessageID: m.ID,
+		ChannelID: m.ChannelID,
+		GuildID:   m.GuildID,
+	})
 	if err != nil {
 		logger.Error("Error sending message", zap.Error(err))
 		return
