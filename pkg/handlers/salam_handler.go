@@ -5,12 +5,12 @@ import (
 	"go.uber.org/zap"
 )
 
-func PingHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
+func SalamHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
 	if m.Author.ID == s.State.User.ID {
 		return
 	}
 
-	_, err := s.ChannelMessageSendReply(m.ChannelID, "Pong!", &discordgo.MessageReference{
+	_, err := s.ChannelMessageSendReply(m.ChannelID, "Assalamu'alaikum", &discordgo.MessageReference{
 		MessageID: m.ID,
 		ChannelID: m.ChannelID,
 		GuildID:   m.GuildID,
