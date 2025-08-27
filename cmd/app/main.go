@@ -1,9 +1,9 @@
 package main
 
 import (
-	"ikel-bot/pkg/configs"
-	"ikel-bot/pkg/handlers"
-	"ikel-bot/pkg/utils"
+	"katou-megumi/pkg/configs"
+	"katou-megumi/pkg/handlers"
+	"katou-megumi/pkg/utils"
 	"os"
 	"os/signal"
 	"strings"
@@ -17,7 +17,6 @@ func main() {
 	utils.LoadEnv()
 
 	var DISCORD_TOKEN = os.Getenv("DISCORD_TOKEN")
-
 	discord := configs.NewDiscord(DISCORD_TOKEN)
 
 	discord.Client.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
@@ -40,7 +39,7 @@ func main() {
 		}
 		if splitMessage[0] == "!asmaulhusna" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			handlers.AsmaulHusnaHandler(s, m, logger, command)
+			// handlers.AsmaulHusnaHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!ask" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
@@ -61,6 +60,10 @@ func main() {
 		if splitMessage[0] == "!quote" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.QuoteHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!editbackground" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.BackgroundPhotoHandler(s, m, logger, command)
 		}
 	})
 

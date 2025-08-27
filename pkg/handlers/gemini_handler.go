@@ -2,7 +2,8 @@ package handlers
 
 import (
 	"context"
-	"ikel-bot/pkg/configs"
+	"katou-megumi/pkg/configs"
+	"katou-megumi/pkg/utils"
 	"os"
 
 	"github.com/bwmarrin/discordgo"
@@ -36,12 +37,5 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 		return
 	}
 
-	_, err = s.ChannelMessageSendReply(m.ChannelID, response.Text(), &discordgo.MessageReference{
-		MessageID: m.ID,
-		ChannelID: m.ChannelID,
-		GuildID:   m.GuildID,
-	})
-	if err != nil {
-		logger.Error("Error sending message", zap.Error(err))
-	}
+	utils.MessageWithReply(s, m, response.Text(), logger)
 }

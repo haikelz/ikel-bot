@@ -3,8 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"ikel-bot/pkg/entities"
 	"io"
+	"katou-megumi/pkg/entities"
+	"katou-megumi/pkg/utils"
 	"net/http"
 	"os"
 
@@ -35,13 +36,5 @@ func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 		return
 	}
 
-	_, err = s.ChannelMessageSendReply(m.ChannelID, fmt.Sprintf("%d - %s - %s - %s", doaResponse[0].ID, doaResponse[0].Doa, doaResponse[0].Ayat, doaResponse[0].Artinya, command), &discordgo.MessageReference{
-		MessageID: m.ID,
-		ChannelID: m.ChannelID,
-		GuildID:   m.GuildID,
-	})
-	if err != nil {
-		logger.Error("Error sending message", zap.Error(err))
-		return
-	}
+	utils.MessageWithReply(s, m, fmt.Sprintf("%d - %s - %s - %s", doaResponse[0].ID, doaResponse[0].Doa, doaResponse[0].Ayat, doaResponse[0].Artinya, command), logger)
 }
