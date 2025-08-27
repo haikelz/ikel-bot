@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"ikel-bot/pkg/utils"
+
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )
@@ -10,13 +12,5 @@ func SalamHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.
 		return
 	}
 
-	_, err := s.ChannelMessageSendReply(m.ChannelID, "Assalamu'alaikum", &discordgo.MessageReference{
-		MessageID: m.ID,
-		ChannelID: m.ChannelID,
-		GuildID:   m.GuildID,
-	})
-	if err != nil {
-		logger.Error("Error sending message", zap.Error(err))
-		return
-	}
+	utils.MessageWithReply(s, m, "Assalamu'alaikum", logger)
 }

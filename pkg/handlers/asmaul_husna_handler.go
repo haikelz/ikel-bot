@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"ikel-bot/pkg/entities"
+	"ikel-bot/pkg/utils"
 	"io"
 	"net/http"
 	"os"
@@ -49,13 +50,5 @@ func loopAsmaulHusnaMessage(start int, end int, asmaulHusnaResponse entities.Asm
 		content += fmt.Sprintf("%d - %s - %s - %s\n", v.Urutan, v.Latin, v.Arab, v.Arti)
 	}
 
-	_, err := s.ChannelMessageSendReply(m.ChannelID, content, &discordgo.MessageReference{
-		MessageID: m.ID,
-		ChannelID: m.ChannelID,
-		GuildID:   m.GuildID,
-	})
-	if err != nil {
-		logger.Error("Error sending message", zap.Error(err))
-		return
-	}
+	utils.MessageWithReply(s, m, content, logger)
 }

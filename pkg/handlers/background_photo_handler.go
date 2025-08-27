@@ -3,6 +3,7 @@ package handlers
 import (
 	"bytes"
 	"fmt"
+	"ikel-bot/pkg/utils"
 	"net/http"
 	"os"
 
@@ -18,7 +19,7 @@ func BackgroundPhotoHandler(s *discordgo.Session, m *discordgo.MessageCreate, lo
 			return
 		}
 
-		s.ChannelMessageSendReply(m.ChannelID, "Ini adalah perintah untuk mengubah warna background dari sebuah foto. Nama warna yang dimasukkan harus dalam bahasa Inggris.  Contoh: *!editphoto red*", m.Reference())
+		utils.MessageWithReply(s, m, "Ini adalah perintah untuk mengubah warna background dari sebuah foto. Nama warna yang dimasukkan harus dalam bahasa Inggris.  Contoh: *!editphoto red*", logger)
 		return
 	}
 

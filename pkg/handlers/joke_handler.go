@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"ikel-bot/pkg/entities"
+	"ikel-bot/pkg/utils"
 	"io"
 	"net/http"
 	"os"
@@ -26,19 +27,10 @@ func JokeHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 		return
 	}
 
-	_, err = s.ChannelMessageSendEmbedReply(m.ChannelID, &discordgo.MessageEmbed{
+	utils.MessageWithEmbedReply(s, m, &discordgo.MessageEmbed{
 		Title: jokeText,
 		Image: &discordgo.MessageEmbedImage{URL: imageUrl},
-	}, &discordgo.MessageReference{
-		MessageID: m.ID,
-		ChannelID: m.ChannelID,
-		GuildID:   m.GuildID,
-	})
-	if err != nil {
-		logger.Error("Error sending message", zap.Error(err))
-		return
-	}
-
+	}, logger)
 }
 
 func getJokeImage(JOKES_API_URL string, logger *zap.Logger) (string, error) {
