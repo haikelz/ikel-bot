@@ -39,7 +39,7 @@ func main() {
 		}
 		if splitMessage[0] == "!asmaulhusna" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			handlers.AsmaulHusnaHandler(s, m, logger, command)
+			// handlers.AsmaulHusnaHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!ask" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
@@ -60,6 +60,10 @@ func main() {
 		if splitMessage[0] == "!quote" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.QuoteHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!editbackground" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.BackgroundPhotoHandler(s, m, logger, command)
 		}
 	})
 
