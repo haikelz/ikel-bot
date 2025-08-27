@@ -3,9 +3,9 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"ikel-bot/pkg/entities"
-	"ikel-bot/pkg/utils"
 	"io"
+	"katou-megumi/pkg/entities"
+	"katou-megumi/pkg/utils"
 	"net/http"
 	"os"
 

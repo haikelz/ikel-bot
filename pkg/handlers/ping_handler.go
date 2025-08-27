@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"ikel-bot/pkg/utils"
+	"katou-megumi/pkg/utils"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"

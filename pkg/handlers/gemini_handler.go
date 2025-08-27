@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"context"
-	"ikel-bot/pkg/configs"
-	"ikel-bot/pkg/utils"
+	"katou-megumi/pkg/configs"
+	"katou-megumi/pkg/utils"
 	"os"
 
 	"github.com/bwmarrin/discordgo"

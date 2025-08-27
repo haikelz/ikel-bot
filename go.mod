@@ -1,4 +1,4 @@
-module ikel-bot
+module katou-megumi
 
 go 1.23.1
 

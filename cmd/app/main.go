@@ -1,9 +1,9 @@
 package main
 
 import (
-	"ikel-bot/pkg/configs"
-	"ikel-bot/pkg/handlers"
-	"ikel-bot/pkg/utils"
+	"katou-megumi/pkg/configs"
+	"katou-megumi/pkg/handlers"
+	"katou-megumi/pkg/utils"
 	"os"
 	"os/signal"
 	"strings"
