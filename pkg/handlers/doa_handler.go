@@ -18,6 +18,7 @@ func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 
 	response, err := http.Get(DOA_API_URL + "/api/doa/v1/random")
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error fetching do'a", logger)
 		logger.Error("Error fetching do'a", zap.Error(err))
 		return
 	}
@@ -25,6 +26,7 @@ func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error reading do'a", logger)
 		logger.Error("Error reading do'a", zap.Error(err))
 		return
 	}
@@ -32,6 +34,7 @@ func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 	var doaResponse []entities.Doa
 	err = json.Unmarshal(body, &doaResponse)
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error unmarshalling do'a", logger)
 		logger.Error("Error unmarshalling do'a", zap.Error(err))
 		return
 	}

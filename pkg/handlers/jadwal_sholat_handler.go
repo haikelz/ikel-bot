@@ -58,21 +58,24 @@ func getCityId(s *discordgo.Session, m *discordgo.MessageCreate, cityName string
 
 	response, err := http.Get(QURAN_API_URL + "/v2/sholat/kota/cari/" + cityName)
 	if err != nil {
-		logger.Error("Error!", zap.Error(err))
 		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
+		logger.Error("Error!", zap.Error(err))
 		return "", err
 	}
 	defer response.Body.Close()
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
+		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
 		logger.Error("Error reading body", zap.Error(err))
+		return "", err
 	}
 
 	var jadwalSholatResponse entities.JadwalSholaCityIdResponse
 
 	err = json.Unmarshal(body, &jadwalSholatResponse)
 	if err != nil {
+		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
 		logger.Error("Error unmarshalling body", zap.Error(err))
 		return "", err
 	}

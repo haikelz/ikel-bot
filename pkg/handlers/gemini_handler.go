@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"katou-megumi/pkg/configs"
 	"katou-megumi/pkg/utils"
 	"os"
@@ -33,7 +34,14 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 		ResponseMIMEType: "text/plain",
 	})
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error generating content", logger)
 		logger.Error("Error generating content", zap.Error(err))
+		return
+	}
+
+	if response.Text() == "" {
+		utils.MessageWithReply(s, m, "Error generating content", logger)
+		logger.Error("Error generating content", zap.Error(errors.New("error generating content")))
 		return
 	}
 

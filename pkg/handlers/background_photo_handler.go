@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
+	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
 	"net/http"
 	"os"
@@ -18,25 +20,47 @@ func BackgroundPhotoHandler(s *discordgo.Session, m *discordgo.MessageCreate, lo
 		return
 	}
 
+	imageUrl := m.Attachments[0].URL
+
+	removeBgData := entities.RemoveBgRequest{ImageUrl: imageUrl, BgColor: command}
+
+	jsonData, err := json.Marshal(removeBgData)
+	if err != nil {
+		utils.MessageWithReply(s, m, "Error marshalling data", logger)
+		logger.Error("Error marshalling data", zap.Error(err))
+		return
+	}
+	fmt.Println(string(jsonData))
+
 	var REMOVE_BG_API_URL = os.Getenv("REMOVE_BG_API_URL")
 	var REMOVE_BG_API_KEY = os.Getenv("REMOVE_BG_API_KEY")
 
 	url := fmt.Sprintf("%s/v1.0/removebg", REMOVE_BG_API_URL)
 
-	response, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(m.Embeds[0].Image.URL)))
-	response.Header.Set("Accept", "application/json")
-	response.Header.Set("Content-Type", "application/json")
-	response.Header.Set("X-Api-Key", REMOVE_BG_API_KEY)
-
-	fmt.Println(response)
+	req, err := http.NewRequest("POST", url, bytes.NewReader(jsonData))
 
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error sending message", logger)
 		logger.Error("Error sending message", zap.Error(err))
 		return
 	}
 
+	req.Header.Set("Accept", "application/json")
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("X-Api-Key", REMOVE_BG_API_KEY)
+
+	client := &http.Client{}
+	response, err := client.Do(req)
+	if err != nil {
+		utils.MessageWithReply(s, m, "Error sending message", logger)
+		logger.Error("Error sending message", zap.Error(err))
+		return
+	}
+	defer response.Body.Close()
+
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error reading response body", logger)
 		logger.Error("Error reading response body", zap.Error(err))
 		return
 	}
