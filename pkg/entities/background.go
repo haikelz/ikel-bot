@@ -7,12 +7,19 @@ type BackgroundResult struct {
 }
 
 type RemoveBgRequest struct {
-	ImageUrl string `json:"image_url"`
-	BgColor  string `json:"bg_color"`
+	ImageFileB64 string `json:"image_file_b64"`
+	BgColor      string `json:"bg_color"`
 }
 
 type RemoveBgResponse struct {
 	Data struct {
-		Result string `json:"result"`
+		Result_b64 string `json:"result_b64"`
 	} `json:"data"`
+}
+
+// Alternative response structure for some APIs
+type RemoveBgResponseAlt struct {
+	Result  string `json:"result"`
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
