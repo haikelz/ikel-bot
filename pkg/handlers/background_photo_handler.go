@@ -8,7 +8,6 @@ import (
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
 	"net/http"
-	"os"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
@@ -30,12 +29,8 @@ func BackgroundPhotoHandler(s *discordgo.Session, m *discordgo.MessageCreate, lo
 		logger.Error("Error marshalling data", zap.Error(err))
 		return
 	}
-	fmt.Println(string(jsonData))
 
-	var REMOVE_BG_API_URL = os.Getenv("REMOVE_BG_API_URL")
-	var REMOVE_BG_API_KEY = os.Getenv("REMOVE_BG_API_KEY")
-
-	url := fmt.Sprintf("%s/v1.0/removebg", REMOVE_BG_API_URL)
+	url := fmt.Sprintf("%s/v1.0/removebg", utils.Env().REMOVE_BG_API_URL)
 
 	req, err := http.NewRequest("POST", url, bytes.NewReader(jsonData))
 
@@ -47,7 +42,7 @@ func BackgroundPhotoHandler(s *discordgo.Session, m *discordgo.MessageCreate, lo
 
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-Api-Key", REMOVE_BG_API_KEY)
+	req.Header.Set("X-Api-Key", utils.Env().REMOVE_BG_API_KEY)
 
 	client := &http.Client{}
 	response, err := client.Do(req)

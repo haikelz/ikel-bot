@@ -8,7 +8,6 @@ import (
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/bwmarrin/discordgo"
@@ -16,7 +15,6 @@ import (
 )
 
 func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
-	var ASMAUL_HUSNA_API_URL = os.Getenv("ASMAUL_HUSNA_API_URL")
 	/*
 		TODO:
 		- Buat case jika input dari user itu urutan asmaul husna
@@ -24,7 +22,7 @@ func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger
 	*/
 
 	if command == "" {
-		asmaulHusnaResponse := getAllAsmaulHusna(ASMAUL_HUSNA_API_URL, s, m, logger)
+		asmaulHusnaResponse := getAllAsmaulHusna(utils.Env().ASMAUL_HUSNA_API_URL, s, m, logger)
 
 		if asmaulHusnaResponse == nil {
 			logger.Error("Error fetching Asmaul Husna", zap.Error(errors.New("error fetching Asmaul Husna")))
@@ -41,7 +39,7 @@ func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger
 	}
 
 	if number, err := strconv.Atoi(command); err == nil {
-		asmaulHusnaResponse := getAsmaulHusnaByUrutan(number, ASMAUL_HUSNA_API_URL, s, m, logger)
+		asmaulHusnaResponse := getAsmaulHusnaByUrutan(number, utils.Env().ASMAUL_HUSNA_API_URL, s, m, logger)
 
 		if asmaulHusnaResponse.Data.Urutan == 0 {
 			utils.MessageWithReply(s, m, "Asmaul Husna tidak ditemukan", logger)
@@ -52,7 +50,7 @@ func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger
 		return
 	}
 
-	asmaulHusnaResponse := getAsmaulHusnaByLatin(command, ASMAUL_HUSNA_API_URL, s, m, logger)
+	asmaulHusnaResponse := getAsmaulHusnaByLatin(command, utils.Env().ASMAUL_HUSNA_API_URL, s, m, logger)
 
 	if asmaulHusnaResponse.Data.Urutan == 0 {
 		utils.MessageWithReply(s, m, "Asmaul Husna tidak ditemukan", logger)

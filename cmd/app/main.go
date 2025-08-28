@@ -14,10 +14,8 @@ import (
 
 func main() {
 	logger := configs.NewZap()
-	utils.LoadEnv()
 
-	var DISCORD_TOKEN = os.Getenv("DISCORD_TOKEN")
-	discord := configs.NewDiscord(DISCORD_TOKEN)
+	discord := configs.NewDiscord(utils.Env().DISCORD_TOKEN)
 
 	discord.Client.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		logger.Info("Bot is running")

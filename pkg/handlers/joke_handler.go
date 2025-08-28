@@ -6,23 +6,20 @@ import (
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
 	"net/http"
-	"os"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )
 
 func JokeHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
-	var JOKES_API_URL = os.Getenv("JOKES_API_URL")
-
-	imageUrl, err := getJokeImage(JOKES_API_URL, s, m, logger)
+	imageUrl, err := getJokeImage(s, m, logger)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error getting joke image", logger)
 		logger.Error("Error getting joke image", zap.Error(err))
 		return
 	}
 
-	jokeText, err := getJokeText(JOKES_API_URL, s, m, logger)
+	jokeText, err := getJokeText(s, m, logger)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error getting joke text", logger)
 		logger.Error("Error getting joke text", zap.Error(err))
@@ -35,8 +32,8 @@ func JokeHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 	}, logger)
 }
 
-func getJokeImage(JOKES_API_URL string, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) (string, error) {
-	response, err := http.Get(JOKES_API_URL + "/api/image/random")
+func getJokeImage(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) (string, error) {
+	response, err := http.Get(utils.Env().JOKES_API_URL + "/api/image/random")
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error fetching jokes", logger)
 		logger.Error("Error fetching jokes", zap.Error(err))
@@ -55,13 +52,14 @@ func getJokeImage(JOKES_API_URL string, s *discordgo.Session, m *discordgo.Messa
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error unmarshalling jokes", logger)
 		logger.Error("Error unmarshalling jokes", zap.Error(err))
+		return "", err
 	}
 
 	return jokeImageResponse.Data.Url, nil
 }
 
-func getJokeText(JOKES_API_URL string, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) (string, error) {
-	response, err := http.Get(JOKES_API_URL + "/api/text/random")
+func getJokeText(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) (string, error) {
+	response, err := http.Get(utils.Env().JOKES_API_URL + "/api/text/random")
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error fetching jokes", logger)
 		logger.Error("Error fetching jokes", zap.Error(err))
@@ -70,6 +68,7 @@ func getJokeText(JOKES_API_URL string, s *discordgo.Session, m *discordgo.Messag
 
 	body, err := io.ReadAll(response.Body)
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error reading response body", logger)
 		logger.Error("Error reading response body", zap.Error(err))
 		return "", err
 	}
@@ -78,6 +77,7 @@ func getJokeText(JOKES_API_URL string, s *discordgo.Session, m *discordgo.Messag
 	err = json.Unmarshal(body, &jokeTextResponse)
 	if err != nil {
 		logger.Error("Error unmarshalling jokes", zap.Error(err))
+		return "", err
 	}
 
 	return jokeTextResponse.Data, nil
