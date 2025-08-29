@@ -37,30 +37,8 @@ func BackgroundPhotoHandler(s *discordgo.Session, m *discordgo.MessageCreate, lo
 	}
 
 	client := &http.Client{}
-	imageUrl := attachment.URL
 
-	image, err := client.Get(imageUrl)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error getting image", logger)
-		logger.Error("Error getting image", zap.Error(err))
-		return
-	}
-	defer image.Body.Close()
-
-	if image.StatusCode != http.StatusOK {
-		utils.MessageWithReply(s, m, "Error downloading image", logger)
-		logger.Error("Error downloading image", zap.Int("status", image.StatusCode))
-		return
-	}
-
-	imageBytes, err := io.ReadAll(image.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error reading image", logger)
-		logger.Error("Error reading image", zap.Error(err))
-		return
-	}
-
-	imageBase64 := base64.StdEncoding.EncodeToString(imageBytes)
+	imageBase64 := utils.ImageUrlToBase64(s, m, logger, attachment.URL)
 
 	removeBgData := entities.RemoveBgRequest{ImageFileB64: imageBase64, BgColor: command}
 

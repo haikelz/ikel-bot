@@ -63,6 +63,10 @@ func main() {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.BackgroundPhotoHandler(s, m, logger, command)
 		}
+		if splitMessage[0] == "!ocr" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.OcrHandler(s, m, logger, command)
+		}
 	})
 
 	discord.Client.Open()
