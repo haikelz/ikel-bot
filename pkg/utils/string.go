@@ -14,6 +14,9 @@ const WRONG_FORMAT string = "Format yang dimasukkan Salah!"
 const ERROR_MESSAGE string = "Error!"
 const SUCCESS_MESSAGE string = "Berhasil!"
 
+const GEMINI_MODEL string = "gemini-2.5-pro"
+const GEMINI_ROLE string = "user"
+
 func ImageUrlToBase64(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, imageUrl string) string {
 	client := &http.Client{}
 
