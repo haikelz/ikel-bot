@@ -7,7 +7,6 @@ import (
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
 	"net/http"
-	"os"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
@@ -34,9 +33,7 @@ func QuoteHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.
 }
 
 func GetQuote(anime string, logger *zap.Logger) string {
-	var ANIME_QUOTE_API_URL = os.Getenv("ANIME_QUOTE_API_URL")
-
-	response, err := http.Get(ANIME_QUOTE_API_URL + "/api/getbyanime?anime=" + anime + "&page=1")
+	response, err := http.Get(utils.Env().ANIME_QUOTE_API_URL + "/api/getbyanime?anime=" + anime + "&page=1")
 	if err != nil {
 		logger.Error("Error getting quote", zap.Error(err))
 		return ""
@@ -60,10 +57,9 @@ func GetQuote(anime string, logger *zap.Logger) string {
 }
 
 func GetQuotes(logger *zap.Logger) string {
-	var ANIME_QUOTE_API_URL = os.Getenv("ANIME_QUOTE_API_URL")
 	content := ""
 
-	response, err := http.Get(ANIME_QUOTE_API_URL + "/api/getrandom")
+	response, err := http.Get(utils.Env().ANIME_QUOTE_API_URL + "/api/getrandom")
 	if err != nil {
 		logger.Error("Error getting quote", zap.Error(err))
 		return ""

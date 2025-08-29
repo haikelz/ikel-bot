@@ -14,10 +14,8 @@ import (
 
 func main() {
 	logger := configs.NewZap()
-	utils.LoadEnv()
 
-	var DISCORD_TOKEN = os.Getenv("DISCORD_TOKEN")
-	discord := configs.NewDiscord(DISCORD_TOKEN)
+	discord := configs.NewDiscord(utils.Env().DISCORD_TOKEN)
 
 	discord.Client.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
 		logger.Info("Bot is running")
@@ -39,7 +37,7 @@ func main() {
 		}
 		if splitMessage[0] == "!asmaulhusna" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
-			// handlers.AsmaulHusnaHandler(s, m, logger, command)
+			handlers.AsmaulHusnaHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!ask" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
@@ -64,6 +62,10 @@ func main() {
 		if splitMessage[0] == "!editbackground" {
 			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
 			handlers.BackgroundPhotoHandler(s, m, logger, command)
+		}
+		if splitMessage[0] == "!ocr" {
+			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			handlers.OcrHandler(s, m, logger, command)
 		}
 	})
 

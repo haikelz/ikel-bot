@@ -2,9 +2,9 @@ package handlers
 
 import (
 	"context"
+	"errors"
 	"katou-megumi/pkg/configs"
 	"katou-megumi/pkg/utils"
-	"os"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
@@ -16,9 +16,7 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 		return
 	}
 
-	var GEMINI_API_KEY = os.Getenv("GEMINI_API_KEY")
-
-	client := configs.NewGemini(context.Background(), GEMINI_API_KEY)
+	client := configs.NewGemini(context.Background(), utils.Env().GEMINI_API_KEY)
 
 	response, err := client.Models.GenerateContent(context.Background(), "gemini-2.5-pro", []*genai.Content{
 		{
@@ -33,7 +31,14 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 		ResponseMIMEType: "text/plain",
 	})
 	if err != nil {
+		utils.MessageWithReply(s, m, "Error generating content", logger)
 		logger.Error("Error generating content", zap.Error(err))
+		return
+	}
+
+	if response.Text() == "" {
+		utils.MessageWithReply(s, m, "Error generating content", logger)
+		logger.Error("Error generating content", zap.Error(errors.New("error generating content")))
 		return
 	}
 
