@@ -5,6 +5,7 @@ go 1.23.1
 require (
 	github.com/bwmarrin/discordgo v0.29.0
 	github.com/joho/godotenv v1.5.1
+	github.com/otiai10/gosseract/v2 v2.4.1
 	go.uber.org/zap v1.27.0
 	google.golang.org/genai v1.21.0
 )
