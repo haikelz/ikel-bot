@@ -1,20 +1,22 @@
 package entities
 
+type Jadwal struct {
+	Imsak   string `json:"imsak"`
+	Subuh   string `json:"subuh"`
+	Terbit  string `json:"terbit"`
+	Dhuha   string `json:"dhuha"`
+	Dzuhur  string `json:"dzuhur"`
+	Ashar   string `json:"ashar"`
+	Maghrib string `json:"maghrib"`
+	Isya    string `json:"isya"`
+	Date    string `json:"date"`
+}
+
 type JadwalSholat struct {
 	Id     int    `json:"id"`
 	Lokasi string `json:"lokasi"`
 	Daerah string `json:"daerah"`
-	Jadwal struct {
-		Imsak   string `json:"imsak"`
-		Subuh   string `json:"subuh"`
-		Terbit  string `json:"terbit"`
-		Dhuha   string `json:"dhuha"`
-		Dzuhur  string `json:"dzuhur"`
-		Ashar   string `json:"ashar"`
-		Maghrib string `json:"maghrib"`
-		Isya    string `json:"isya"`
-		Date    string `json:"date"`
-	}
+	Jadwal Jadwal `json:"jadwal"`
 }
 
 type JadwalSholaCityIdRequest struct {

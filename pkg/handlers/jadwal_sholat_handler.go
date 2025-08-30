@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
-	"net/http"
 	"time"
 
 	"github.com/bwmarrin/discordgo"
@@ -53,24 +51,11 @@ func JadwalSholatHandler(s *discordgo.Session, m *discordgo.MessageCreate, logge
 }
 
 func getCityId(s *discordgo.Session, m *discordgo.MessageCreate, cityName string, logger *zap.Logger) (string, error) {
-	response, err := http.Get(utils.Env().QURAN_API_URL + "/v2/sholat/kota/cari/" + cityName)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
-		logger.Error("Error!", zap.Error(err))
-		return "", err
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
-		logger.Error("Error reading body", zap.Error(err))
-		return "", err
-	}
+	body := utils.Get(utils.Env().QURAN_API_URL+"/v2/sholat/kota/cari/"+cityName, s, m, logger)
 
 	var jadwalSholatResponse entities.JadwalSholaCityIdResponse
 
-	err = json.Unmarshal(body, &jadwalSholatResponse)
+	err := json.Unmarshal(body, &jadwalSholatResponse)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
 		logger.Error("Error unmarshalling body", zap.Error(err))
@@ -83,23 +68,10 @@ func getCityId(s *discordgo.Session, m *discordgo.MessageCreate, cityName string
 func getJadwalSholat(s *discordgo.Session, m *discordgo.MessageCreate, cityId string, logger *zap.Logger) (entities.JadwalSholatResponse, error) {
 	today := time.Now().Format("2006-01-02")
 
-	response, err := http.Get(utils.Env().QURAN_API_URL + "/v2/sholat/jadwal/" + cityId + "/" + today)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
-		logger.Error("Error!", zap.Error(err))
-		return entities.JadwalSholatResponse{}, err
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
-		logger.Error("Error reading body!", zap.Error(err))
-		return entities.JadwalSholatResponse{}, err
-	}
+	body := utils.Get(utils.Env().QURAN_API_URL+"/v2/sholat/jadwal/"+cityId+"/"+today, s, m, logger)
 
 	var jadwalSholatResponse entities.JadwalSholatResponse
-	err = json.Unmarshal(body, &jadwalSholatResponse)
+	err := json.Unmarshal(body, &jadwalSholatResponse)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Maaf, terjadi kesalahan saat mengambil data jadwal sholat!", logger)
 		logger.Error("Error unmarshalling body", zap.Error(err))

@@ -32,7 +32,7 @@ func GeminiHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap
 
 		imgPart := &genai.Part{
 			InlineData: &genai.Blob{
-				MIMEType: "image/png",
+				MIMEType: m.Attachments[0].ContentType,
 				Data:     imageBytes,
 			},
 		}

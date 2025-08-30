@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    env_file:
+      - .env
+    restart: always
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["go", "run", "cmd/app/main.go"]
+    networks:
+      - katou-megumi-network
+
+networks:
+  katou-megumi-network:
+    driver: bridge

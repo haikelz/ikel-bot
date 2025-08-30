@@ -11,11 +11,11 @@ import (
 )
 
 func OcrHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
+	client := &http.Client{}
+	imageUrl := m.Attachments[0].URL
+
 	ocr := gosseract.NewClient()
 	defer ocr.Close()
-	client := &http.Client{}
-
-	imageUrl := m.Attachments[0].URL
 
 	image, err := client.Get(imageUrl)
 	if err != nil {
@@ -33,7 +33,6 @@ func OcrHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Lo
 	}
 
 	ocr.SetImageFromBytes(imageBytes)
-
 	text, _ := ocr.Text()
 
 	utils.MessageWithReply(s, m, text, logger)

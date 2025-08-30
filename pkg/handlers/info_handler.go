@@ -44,12 +44,19 @@ func InfoHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 ---
 
 ## 👨‍💻 **Developer**
-**Created by:** [haikelz](https://github.com/haikelz/)
+
+[haikelz](https://github.com/haikelz/)
 
 ---
 
 *Selamat menggunakan Katou Megumi Bot! 💜*	
 `
 
-	utils.MessageWithReply(s, m, content, logger)
+	katouMegumiImage := "https://avatars.githubusercontent.com/u/77146709?v=4"
+
+	var katouMegumiImageEmbed = &discordgo.MessageEmbed{
+		Description: content,
+		Image:       &discordgo.MessageEmbedImage{URL: katouMegumiImage},
+	}
+	utils.MessageWithEmbedReply(s, m, katouMegumiImageEmbed, logger)
 }
