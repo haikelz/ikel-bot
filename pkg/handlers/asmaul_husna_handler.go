@@ -4,10 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
-	"net/http"
 	"strconv"
 
 	"github.com/bwmarrin/discordgo"
@@ -15,16 +13,11 @@ import (
 )
 
 func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
-	/*
-		TODO:
-		- Buat case jika input dari user itu urutan asmaul husna
-		- Buat case jika input dari user itu nama asmaul husna
-	*/
-
 	if command == "" {
 		asmaulHusnaResponse := getAllAsmaulHusna(utils.Env().ASMAUL_HUSNA_API_URL, s, m, logger)
 
 		if asmaulHusnaResponse == nil {
+			utils.MessageWithReply(s, m, "Error fetching Asmaul Husna", logger)
 			logger.Error("Error fetching Asmaul Husna", zap.Error(errors.New("error fetching Asmaul Husna")))
 			return
 		}
@@ -43,6 +36,7 @@ func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger
 
 		if asmaulHusnaResponse.Data.Urutan == 0 {
 			utils.MessageWithReply(s, m, "Asmaul Husna tidak ditemukan", logger)
+			logger.Error("Asmaul Husna tidak ditemukan", zap.Error(errors.New("Asmaul Husna tidak ditemukan"+command)))
 			return
 		}
 
@@ -54,6 +48,7 @@ func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger
 
 	if asmaulHusnaResponse.Data.Urutan == 0 {
 		utils.MessageWithReply(s, m, "Asmaul Husna tidak ditemukan", logger)
+		logger.Error("Asmaul Husna tidak ditemukan", zap.Error(errors.New("Asmaul Husna tidak ditemukan"+command)))
 		return
 	}
 
@@ -71,23 +66,13 @@ func loopAsmaulHusnaMessage(start int, end int, asmaulHusnaResponse []entities.A
 }
 
 func getAllAsmaulHusna(ASMAUL_HUSNA_API_URL string, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) []entities.AsmaulHusna {
-	response, err := http.Get(ASMAUL_HUSNA_API_URL + "/api/all")
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error fetching Asmaul Husna", logger)
-		return nil
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error reading Asma'ul Husna", logger)
-		return nil
-	}
+	body := utils.Get(ASMAUL_HUSNA_API_URL+"/api/all", s, m, logger)
 
 	var asmaulHusnaResponse entities.AsmaulHusnaResponse
-	err = json.Unmarshal(body, &asmaulHusnaResponse)
+	err := json.Unmarshal(body, &asmaulHusnaResponse)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error unmarshalling Asmaul Husna", logger)
+		logger.Error("Error unmarshalling Asmaul Husna", zap.Error(err))
 		return nil
 	}
 
@@ -95,25 +80,14 @@ func getAllAsmaulHusna(ASMAUL_HUSNA_API_URL string, s *discordgo.Session, m *dis
 }
 
 func getAsmaulHusnaByUrutan(urutan int, ASMAUL_HUSNA_API_URL string, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) entities.AsmaulHusnaByLatinOrUrutanResponse {
-	response, err := http.Get(ASMAUL_HUSNA_API_URL + "/api/" + strconv.Itoa(urutan))
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error fetching Asmaul Husna", logger)
-		return entities.AsmaulHusnaByLatinOrUrutanResponse{}
-	}
-
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error reading Asmaul Husna", logger)
-		return entities.AsmaulHusnaByLatinOrUrutanResponse{}
-	}
+	body := utils.Get(ASMAUL_HUSNA_API_URL+"/api/"+strconv.Itoa(urutan), s, m, logger)
 
 	var asmaulHusnaResponse entities.AsmaulHusnaByLatinOrUrutanResponse
 
-	err = json.Unmarshal(body, &asmaulHusnaResponse)
+	err := json.Unmarshal(body, &asmaulHusnaResponse)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error unmarshalling Asma'ul Husna", logger)
+		logger.Error("Error unmarshalling Asmaul Husna", zap.Error(err))
 		return entities.AsmaulHusnaByLatinOrUrutanResponse{}
 	}
 
@@ -121,22 +95,11 @@ func getAsmaulHusnaByUrutan(urutan int, ASMAUL_HUSNA_API_URL string, s *discordg
 }
 
 func getAsmaulHusnaByLatin(latin string, ASMAUL_HUSNA_API_URL string, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) entities.AsmaulHusnaByLatinOrUrutanResponse {
-	response, err := http.Get(ASMAUL_HUSNA_API_URL + "/api/latin/" + latin)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error fetching Asmaul Husna", logger)
-		return entities.AsmaulHusnaByLatinOrUrutanResponse{}
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error reading Asmaul Husna", logger)
-		return entities.AsmaulHusnaByLatinOrUrutanResponse{}
-	}
+	body := utils.Get(ASMAUL_HUSNA_API_URL+"/api/latin/"+latin, s, m, logger)
 
 	var asmaulHusnaResponse entities.AsmaulHusnaByLatinOrUrutanResponse
 
-	err = json.Unmarshal(body, &asmaulHusnaResponse)
+	err := json.Unmarshal(body, &asmaulHusnaResponse)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error unmarshalling Asmaul Husna", logger)
 		return entities.AsmaulHusnaByLatinOrUrutanResponse{}

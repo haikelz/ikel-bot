@@ -2,10 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"io"
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
-	"net/http"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
@@ -33,22 +31,10 @@ func JokeHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.L
 }
 
 func getJokeImage(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) (string, error) {
-	response, err := http.Get(utils.Env().JOKES_API_URL + "/api/image/random")
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error fetching jokes", logger)
-		logger.Error("Error fetching jokes", zap.Error(err))
-		return "", err
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error reading response body", logger)
-		logger.Error("Error reading response body", zap.Error(err))
-		return "", err
-	}
+	body := utils.Get(utils.Env().JOKES_API_URL+"/api/image/random", s, m, logger)
 
 	var jokeImageResponse entities.JokeImageResponse
-	err = json.Unmarshal(body, &jokeImageResponse)
+	err := json.Unmarshal(body, &jokeImageResponse)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error unmarshalling jokes", logger)
 		logger.Error("Error unmarshalling jokes", zap.Error(err))
@@ -59,22 +45,10 @@ func getJokeImage(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.
 }
 
 func getJokeText(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) (string, error) {
-	response, err := http.Get(utils.Env().JOKES_API_URL + "/api/text/random")
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error fetching jokes", logger)
-		logger.Error("Error fetching jokes", zap.Error(err))
-		return "", err
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error reading response body", logger)
-		logger.Error("Error reading response body", zap.Error(err))
-		return "", err
-	}
+	body := utils.Get(utils.Env().JOKES_API_URL+"/api/text/random", s, m, logger)
 
 	var jokeTextResponse entities.JokeTextResponse
-	err = json.Unmarshal(body, &jokeTextResponse)
+	err := json.Unmarshal(body, &jokeTextResponse)
 	if err != nil {
 		logger.Error("Error unmarshalling jokes", zap.Error(err))
 		return "", err

@@ -30,13 +30,13 @@ func BackgroundPhotoHandler(s *discordgo.Session, m *discordgo.MessageCreate, lo
 		return
 	}
 
+	client := &http.Client{}
+
 	attachment := m.Attachments[0]
 	if attachment.Width == 0 || attachment.Height == 0 {
 		utils.MessageWithReply(s, m, "File yang dilampirkan bukan gambar yang valid!", logger)
 		return
 	}
-
-	client := &http.Client{}
 
 	imageBase64 := utils.ImageUrlToBase64(s, m, logger, attachment.URL)
 

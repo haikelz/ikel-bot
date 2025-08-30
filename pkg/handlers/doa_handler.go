@@ -3,33 +3,18 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
-	"net/http"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )
 
 func DoaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
-	response, err := http.Get(utils.Env().DOA_API_URL + "/api/doa/v1/random")
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error fetching do'a", logger)
-		logger.Error("Error fetching do'a", zap.Error(err))
-		return
-	}
-	defer response.Body.Close()
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		utils.MessageWithReply(s, m, "Error reading do'a", logger)
-		logger.Error("Error reading do'a", zap.Error(err))
-		return
-	}
+	body := utils.Get(utils.Env().DOA_API_URL+"/api/doa/v1/random", s, m, logger)
 
 	var doaResponse []entities.Doa
-	err = json.Unmarshal(body, &doaResponse)
+	err := json.Unmarshal(body, &doaResponse)
 	if err != nil {
 		utils.MessageWithReply(s, m, "Error unmarshalling do'a", logger)
 		logger.Error("Error unmarshalling do'a", zap.Error(err))

@@ -17,6 +17,8 @@ func NewDiscord(token string) *Discord {
 		return nil
 	}
 
+	client.StateEnabled = true
+
 	return &Discord{
 		Client: client,
 	}

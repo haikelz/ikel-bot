@@ -4,9 +4,8 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 
-RUN go mod download && go mod verify
+COPY . ./
 
-COPY . .
+RUN go mod download && go mod verify && go mod tidy
 
 RUN go build -o main cmd/app/main.go 
-

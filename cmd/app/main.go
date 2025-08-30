@@ -18,13 +18,13 @@ func main() {
 	discord := configs.NewDiscord(utils.Env().DISCORD_TOKEN)
 
 	discord.Client.AddHandler(func(s *discordgo.Session, r *discordgo.Ready) {
-		logger.Info("Bot is running")
+		handlers.UserInfoHandler(s, r, logger)
 	})
 
 	discord.Client.AddHandler(func(s *discordgo.Session, m *discordgo.MessageCreate) {
-		var splitMessage = strings.Split(m.Content, " ")
-		var args = splitMessage[1:]
-		var command = strings.Join(args, " ")
+		var splitMessage []string = strings.Split(m.Content, " ")
+		var args []string = splitMessage[1:]
+		var command string = strings.Join(args, " ")
 
 		if splitMessage[0] == "!info" {
 			handlers.InfoHandler(s, m, logger, command)

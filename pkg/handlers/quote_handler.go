@@ -3,10 +3,8 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"katou-megumi/pkg/entities"
 	"katou-megumi/pkg/utils"
-	"net/http"
 
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
@@ -14,7 +12,7 @@ import (
 
 func QuoteHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger, command string) {
 	if command == "" {
-		quotes := GetQuotes(logger)
+		quotes := GetQuotes(s, m, logger)
 		_, err := s.ChannelMessageSendReply(m.ChannelID, quotes, &discordgo.MessageReference{
 			MessageID: m.ID,
 			ChannelID: m.ChannelID,
@@ -27,26 +25,16 @@ func QuoteHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.
 		return
 	}
 
-	quote := GetQuote(command, logger)
+	quote := GetQuote(command, s, m, logger)
 
 	utils.MessageWithReply(s, m, quote, logger)
 }
 
-func GetQuote(anime string, logger *zap.Logger) string {
-	response, err := http.Get(utils.Env().ANIME_QUOTE_API_URL + "/api/getbyanime?anime=" + anime + "&page=1")
-	if err != nil {
-		logger.Error("Error getting quote", zap.Error(err))
-		return ""
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		logger.Error("Error reading quote", zap.Error(err))
-		return ""
-	}
+func GetQuote(anime string, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) string {
+	body := utils.Get(utils.Env().ANIME_QUOTE_API_URL+"/api/getbyanime?anime="+anime+"&page=1", s, m, logger)
 
 	var quoteResponse entities.QuoteResponse
-	err = json.Unmarshal(body, &quoteResponse)
+	err := json.Unmarshal(body, &quoteResponse)
 	if err != nil {
 		logger.Error("Error unmarshalling quote", zap.Error(err))
 		return ""
@@ -56,23 +44,13 @@ func GetQuote(anime string, logger *zap.Logger) string {
 	return content
 }
 
-func GetQuotes(logger *zap.Logger) string {
+func GetQuotes(s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) string {
 	content := ""
 
-	response, err := http.Get(utils.Env().ANIME_QUOTE_API_URL + "/api/getrandom")
-	if err != nil {
-		logger.Error("Error getting quote", zap.Error(err))
-		return ""
-	}
-
-	body, err := io.ReadAll(response.Body)
-	if err != nil {
-		logger.Error("Error reading quote", zap.Error(err))
-		return ""
-	}
+	body := utils.Get(utils.Env().ANIME_QUOTE_API_URL+"/api/getrandom", s, m, logger)
 
 	var quoteResponse entities.QuotesResponse
-	err = json.Unmarshal(body, &quoteResponse)
+	err := json.Unmarshal(body, &quoteResponse)
 	if err != nil {
 		logger.Error("Error unmarshalling quote", zap.Error(err))
 		return ""
