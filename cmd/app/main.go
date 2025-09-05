@@ -71,6 +71,10 @@ func main() {
 			s.ChannelTyping(m.ChannelID)
 			handlers.OcrHandler(s, m, logger, command)
 		}
+		if splitMessage[0] == "!shutdown" {
+			s.ChannelTyping(m.ChannelID)
+			handlers.ShutdownHandler(s, m, logger, command)
+		}
 	})
 
 	discord.Client.Open()
