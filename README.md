@@ -1,4 +1,4 @@
-![katou megumi gif](pkg/assets/katou-megumi.gif)
+<img src="pkg/assets/katou-megumi.gif" alt="katou megumi gif" align="center" />
 
 <h1 align="center">Katou Megumi Discord Bot</h1>
 
