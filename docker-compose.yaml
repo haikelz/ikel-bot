@@ -1,5 +1,5 @@
 services:
-  bot:
+  katou-megumi:
     build:
       context: .
       dockerfile: Dockerfile

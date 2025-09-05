@@ -1,6 +1,5 @@
-FROM golang:1.23.4-alpine AS builder
+FROM golang:1.25.1-alpine AS builder
 
-# Install Tesseract OCR and development libraries
 RUN apk add --no-cache \
     tesseract-ocr \
     tesseract-ocr-dev \
