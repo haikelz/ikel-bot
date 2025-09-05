@@ -27,44 +27,48 @@ func main() {
 		var command string = strings.Join(args, " ")
 
 		if splitMessage[0] == "!info" {
+			s.ChannelTyping(m.ChannelID)
 			handlers.InfoHandler(s, m, logger, command)
 		}
+
 		if splitMessage[0] == "!ping" {
+			s.ChannelTyping(m.ChannelID)
 			handlers.PingHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!salam" {
+			s.ChannelTyping(m.ChannelID)
 			handlers.SalamHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!asmaulhusna" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.AsmaulHusnaHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!ask" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.GeminiHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!jokes" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.JokeHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!jadwalsholat" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.JadwalSholatHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!doa" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.DoaHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!quote" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.QuoteHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!editbackground" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.BackgroundPhotoHandler(s, m, logger, command)
 		}
 		if splitMessage[0] == "!ocr" {
-			s.ChannelMessageSend(m.ChannelID, utils.WAIT_MESSAGE)
+			s.ChannelTyping(m.ChannelID)
 			handlers.OcrHandler(s, m, logger, command)
 		}
 	})

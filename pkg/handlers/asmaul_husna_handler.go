@@ -56,7 +56,7 @@ func AsmaulHusnaHandler(s *discordgo.Session, m *discordgo.MessageCreate, logger
 }
 
 func loopAsmaulHusnaMessage(start int, end int, asmaulHusnaResponse []entities.AsmaulHusna, s *discordgo.Session, m *discordgo.MessageCreate, logger *zap.Logger) {
-	content := ``
+	content := ""
 
 	for _, v := range asmaulHusnaResponse[start:end] {
 		content += fmt.Sprintf("%d - %s - %s - %s\n", v.Urutan, v.Latin, v.Arab, v.Arti)
