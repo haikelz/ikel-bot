@@ -1,6 +1,8 @@
-# Katou Megumi Discord Bot
+![katou megumi gif](pkg/assets/katou-megumi.gif)
 
-A feature-rich Discord bot built with Go that provides Islamic content, entertainment, and utility features for Discord servers.
+<h1 align="center">Katou Megumi Discord Bot</h1>
+
+<p align="center">A simple Discord Bot</p>
 
 ## Features
 
@@ -15,10 +17,8 @@ A feature-rich Discord bot built with Go that provides Islamic content, entertai
 - **`!asmaulhusna`** - Show the 99 Names of Allah (Asmaul Husna)
 - **`!jokes`** - Share random jokes
 - **`!quote`** - Display inspirational quotes
-
-### Customization
-
 - **`!editbackground`** - Edit profile background images
+- **`!shutdown`** - Turn off the bot
 
 ## Getting Started
 
