@@ -1,4 +1,6 @@
-<img src="pkg/assets/katou-megumi.gif" alt="katou megumi gif" align="center" />
+<p align="center">
+<img src="pkg/assets/katou-megumi.gif" alt="katou megumi gif" />
+</p>
 
 <h1 align="center">Katou Megumi Discord Bot</h1>
 
